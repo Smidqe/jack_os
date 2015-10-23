@@ -7,26 +7,100 @@
  * Memory operations library.
  */ 
 class Memory {
-
+	
+	static Array memory;
+	static int memory_base;
+	static int length, ptr;
+	
     /** Initializes memory parameters. */
     function void init() {
+		let memory_base = 2048; //size of a stack unit in bits 
+		let memory = memory_base; //whole memory
+		
+		let length = 0;
+		let ptr = 1;
+		
+		let memory[length] = 14335; //14334 = size (length = size + 1)
+		let memory[ptr] = null;
+		return;
     }
 
     /** Returns the value of the main memory at the given address. */
     function int peek(int address) {
+		var Array mem;
+		
+		let mem = address;
+		
+		return mem[0];
     }
 
     /** Sets the value of the main memory at this address
      *  to the given value. */
     function void poke(int address, int value) {
+		var Array mem;
+		
+		let mem = address;
+		let mem[0] = value;
+		
+		return;
     }
 
     /** finds and allocates from the heap a memory block of the 
      *  specified size and returns a reference to its base address. */
     function int alloc(int size) {
-    }
+		var Array block, prev, nextb;
+		let block = memory;
+		let prev = 0;
+		
+		//Finding the first fit slot, where memory area is larger than the size 
+		while (memory[length] < size)
+		{
+			let prev = memory;
+			let block = block[ptr];
+			
+			if (memory = null)
+			{
+				do Sys.error(1);
+			}
+			
+		}
+		
+		//allocating memory for the block
+		/*
+			block[0] = size;
+			block[1] = ptr to next block(doesn't exist)
+			
+		
+		*/
+		let nextb = block + size + 2; // +2 because two first are used for size and the next address (which is null)
+		let nextb[length] = memory[length] - size - 2;
+		let nextb[ptr] = memory[ptr];
+		
+		//Setting the size of the current block
+		let block[length] = size;
+		let block[ptr] = null;
+		
+		//moving the first avaiable memory location.
+		if (prev = 0)
+		{
+			let memory = nextb;
+		}
+		else
+		{
+			let prev[ptr] = nextb;
+		}
+		
+		return block + 2; //skip the size and next pointer
+	}
 
     /** De-allocates the given object and frees its space. */
     function void deAlloc(int object) {
+		var Array obj;
+		
+		let obj = object - 2; //remember those size and
+		let obj[ptr] = memory; //setting the pointer;
+		let memory = obj;
+	
+		return;
     }    
 }

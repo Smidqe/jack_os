@@ -8,30 +8,54 @@
  */
 class String {
 
+	field Array buffer;
+	field int __len;
+	field int __str_len;
+
     /** Constructs a new empty String with a maximum length of maxLength. */
     constructor String new(int maxLength) {
-    }
+		if (maxLength = 0)
+		{
+			let maxLength = 1;
+		}
+    
+		let buffer = Array.new(maxLength);
+		let __len = maxLength;
+		let __str_len = 0;
+		
+		return this;
+	}
 
     /** De-allocates the string and frees its space. */
     method void dispose() {
+		do Array.dispose(this);	
+		return;
     }
 
     /** Returns the current length of this String. */
     method int length() {
+		return __len;
     }
 
     /** Returns the character at location j. */
     method char charAt(int j) {
+		return buffer[j];
     }
 
     /** Sets the j'th character of this string to be c. */
     method void setCharAt(int j, char c) {
+		let buffer[j] = c;
+		
+		return;
     }
 
     /** Appends the character c to the end of this String.
      *  Returns this string as the return value. */
     method String appendChar(char c) {
-    }
+		let __str_len = __str_len + 1;
+		let 
+		
+	}
 
     /** Erases the last character from this String. */
     method void eraseLastChar() {
