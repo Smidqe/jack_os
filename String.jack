@@ -57,6 +57,8 @@ class String {
 			let buffer[__str_len] = c;
 			let __str_len = __str_len + 1;
 		}
+		
+		return this;
 	}
 
     /** Erases the last character from this String. */
@@ -66,6 +68,8 @@ class String {
 			let buffer[__str_len] = "";
 			let __str_len = __str_len - 1;
 		}
+		
+		return;
     }
 
     /** Returns the integer value of this String until the first non
@@ -73,24 +77,19 @@ class String {
     method int intValue() {
 		var int v;
 		var boolean s;
+		var int i;
 		
 		let v = 0;
 		let s = false;
-		while (i < __len)
+		let i = 0;
+		while (~s)
 		{
 			if (~buffer[i] < 48 & ~buffer[i] > 57) //if the character is a number (ASCII)
 			{
 				let s = true;
 				let v = v * 10 + (buffer[i] - 48);
 			}
-			else
-			{
-				if (s)
-				{
-					break;
-				}
-			}
-			
+
 			let i = i + 1;
 		}
 		
@@ -101,11 +100,17 @@ class String {
     method void setInt(int number) {
 		var int l;
 		
-		let l = number % 10;
-		if (l) < 10
-			return l;
+		let l = number / 10;
+		if (l < 10)
+		{
+			do appendChar(l);
+		}
 		else
-			return setInt(number / 10).appendChar(l);
+		{
+			do appendChar(setInt(number / 10));
+		}
+		
+		return;
 	}
 
     /** Returns the new line character. */

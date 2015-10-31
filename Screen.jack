@@ -7,31 +7,89 @@
  * Graphic screen library.
  */
 class Screen {
-
+	static Array screen = 16384;
+	boolean color;
+	
     /** Initializes the Screen. */
     function void init() {
     }
 
     /** Erases the whole screen. */
     function void clearScreen() {
+		var int x;
+		var int y;
+		
+		setColor(false);
+		
+		let x = 0;
+		let y = 0;
+		
+		while (x < 512) 
+		{
+			let y = 0;
+			
+			while (y < 256)
+			{
+				do Screen.drawPixel(x, y);
+				let y = y + 1;
+			}
+			
+			let x = x + 1;
+		}
+		
+		setColor(true);
+		return;
     }
 
     /** Sets the color to be used in further draw commands
      *  where white = false, black = true. */
     function void setColor(boolean b) {
+		let color = b;
     }
 
     /** Draws the (x, y) pixel. */
     function void drawPixel(int x, int y) {
-    }
+		var int address;
+		
+		let address = (y * 32) + (x / 16);
+		let screen[address] = screen[address] | Math.two_to_the(x & 15) ;
+		
+		return;
+	}
 
     /** Draws a line from (x1, y1) to (x2, y2). */
     function void drawLine(int x1, int y1, int x2, int y2) {
-    }
+		//diff in x
+		//diff in y
+	
+	}
 
     /** Draws a filled rectangle where the top left corner
      *  is (x1, y1) and the bottom right corner is (x2, y2). */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
+		var int dY;
+		var int dX;		
+		var int x;
+		var int y;
+		var int sx;
+		var int sy;
+	
+		let dX = Math.abs(x2 - x1);
+		let dY = Math.abs(y2 - y1);
+	
+		let sx = Math.min(x1, x2);
+		let sy = Math.min(y1, y2);
+
+		while (x < dX)
+		{
+			let y = 0;
+			while (y < dY)
+			{
+				do Screen.drawPixel(sx + x, sy + y);
+				let y = y + 1;
+			}
+			let x = x + 1;
+		}		
     }
 
     /** Draws a filled circle of radius r around (cx, cy). */
