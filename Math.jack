@@ -75,31 +75,52 @@ class Math {
 
     /** Returns the integer part of x/y. */
     function int divide(int x, int y) {
-	if (y = 0) {
+	var int count;
+	var int v, s;
+	
+	let count = 0;
+	let v = Math.abs(x);
+	let s = Math.abs(y);
+	
+	if (y = 0) { /** Divide by zero not allowed */
 		do Sys.error(3);
 	}
-	while(~(x < y)) {
-		let x = x-y;
+	while(~(v < s)) { /** creates int based on times y fits to x */
+		let v = v - s;
+		let count = count + 1;
 	} 
 	
-	return x;
+	if (x > 0 & y > 0)
+	{
+		return count;
+	}
+	else
+	{
+		return -count;
+	}
     }
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
 	var int i;
-	var int j;
-	if (x < 0) {
+	var int v;
+	if (x < 0) { /** sqrt from negative not allowed */
 		do Sys.error(4);
 	}
 	
-	let j = Math.divide(x, 2);
-	let i = j;	
-	while (~(i - j) = 0) {
-		let i = j;
-		let j = Math.divide(Math.divide(x, i), 2) + i;
-	}
-	return j;
+		let i = 1;
+		let v = 0;
+		while ((Math.multiply(i, i) < x)) //lasketaan 2 potensseja kunnes arvo on pienempi kuin x
+		{
+			let i = i + 1;
+		
+			if (i = 182) //jos 2 potenssi on suurempi kuin 16bit integer niin arvo = 0 ja tällöin haluttu arvo on yhden pienempi.
+			{
+				return i - 1;
+			}
+		}
+		
+		return i;
     }
 
     /** Returns the greater number. */

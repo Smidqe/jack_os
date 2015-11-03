@@ -45,7 +45,7 @@ class Screen {
 		let x = 0;
 		let y = 0;
 		
-		while (x < 512) 
+		while (x < 512) //käydään läpi jokainen pikseli, alkaen pisteestä (0, 0);
 		{
 			let y = 0;
 			
@@ -73,16 +73,16 @@ class Screen {
     function void drawPixel(int x, int y) {
 		var int address, mask, value;
 		
-		let address = (y * 32) + (x / 16);
-		let mask = (pow2[x & 15]);
+		let address = (y * 32) + (x / 16); //lasketaan annetun pisteen (x, y) muistialueen kohta.
+		let mask = (pow2[x & 15]); //jakojäännös x / 15 antaa tietyn binääriluvun.
 
 		if (color)
 		{
-			let screen[address] = screen[address] | mask;
+			let screen[address] = screen[address] | mask; //annetaan muistialueen kohdan arvoksi unioni. 
 		}
 		else
 		{
-			let screen[address] = screen[address] & ~mask;
+			let screen[address] = screen[address] & ~mask; //
 		}
 		return;
 	}

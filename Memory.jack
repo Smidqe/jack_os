@@ -96,8 +96,8 @@ class Memory {
     function void deAlloc(int object) {
 		var Array obj;
 		
-		let obj = object - 2; //remember those size and ptr ints!
-		let obj[ptr] = memory; //setting the pointer to the current memory pointer;
+		let obj = object - 2; //Muista koko ja pointteri seuraavaan!
+		let obj[ptr] = memory; //Laitetaan objektin pointteri osoittamaan nykyiseen muistialueeseen.
 		let memory = obj; //free the memory by inserting obj back to memory
 	
 		return;

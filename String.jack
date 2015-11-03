@@ -84,10 +84,10 @@ class String {
 		let i = 0;
 		while (~s)
 		{
-			if (~buffer[i] < 48 & ~buffer[i] > 57) //if the character is a number (ASCII)
+			if (~buffer[i] < 48 & ~buffer[i] > 57) //tarkistetaan että onko buffer[i] numero ASCII-taulukossa.
 			{
 				let s = true;
-				let v = v * 10 + (buffer[i] - 48);
+				let v = v * 10 + (buffer[i] - 48); //kerrotaan luvulla 10 ja lisätään numero.
 			}
 
 			let i = i + 1;
@@ -103,11 +103,11 @@ class String {
 		let l = number / 10;
 		if (l < 10)
 		{
-			do appendChar(l);
+			do appendChar(l); //lisätään merkki tähän objektiin.
 		}
 		else
 		{
-			do appendChar(setInt(number / 10));
+			do appendChar(setInt(number / 10)); //kutsutaan rekursiivisesti setInt:ä aina jakaen 10, kunnes meillä on arvo joka < 10
 		}
 		
 		return;
