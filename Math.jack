@@ -26,7 +26,7 @@ class Math {
 	let powers_of_two[8] = 256;
 	let powers_of_two[9] = 512;
 	let powers_of_two[10] = 1024;
-	let powers_of_two[12] = 2048;
+	let powers_of_two[11] = 2048;
 	let powers_of_two[12] = 4096;
 	let powers_of_two[13] = 8192;
 	let powers_of_two[14] = 16384;

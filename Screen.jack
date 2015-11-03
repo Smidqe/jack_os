@@ -7,20 +7,41 @@
  * Graphic screen library.
  */
 class Screen {
-	static Array screen = 16384;
-	boolean color;
+	static Array screen;
+	static boolean color;
+	static Array pow2;
 	
     /** Initializes the Screen. */
-    function void init() {
-    }
+    function void init() {	
+		let screen = 16384;
+		let color = true;
+		
+			let pow2 = Array.new(16);
+			let pow2[0] = 1;
+			let pow2[1] = 2;
+			let pow2[2] = 4;
+			let pow2[3] = 8;
+			let pow2[4] = 16;
+			let pow2[5] = 32;
+			let pow2[6] = 64;
+			let pow2[7] = 128;
+			let pow2[8] = 256;
+			let pow2[9] = 512;
+			let pow2[10] = 1024;
+			let pow2[11] = 2048;
+			let pow2[12] = 4096;
+			let pow2[13] = 8192;
+			let pow2[14] = 16384;
+			let pow2[15] = 32767+1;
+		
+		return;
+	}
 
     /** Erases the whole screen. */
     function void clearScreen() {
 		var int x;
 		var int y;
-		
-		setColor(false);
-		
+
 		let x = 0;
 		let y = 0;
 		
@@ -36,8 +57,7 @@ class Screen {
 			
 			let x = x + 1;
 		}
-		
-		setColor(true);
+
 		return;
     }
 
@@ -45,41 +65,116 @@ class Screen {
      *  where white = false, black = true. */
     function void setColor(boolean b) {
 		let color = b;
+		
+		return;
     }
 
     /** Draws the (x, y) pixel. */
     function void drawPixel(int x, int y) {
-		var int address;
+		var int address, mask, value;
 		
 		let address = (y * 32) + (x / 16);
-		let screen[address] = screen[address] | Math.two_to_the(x & 15) ;
-		
+		let mask = (pow2[x & 15]);
+
+		if (color)
+		{
+			let screen[address] = screen[address] | mask;
+		}
+		else
+		{
+			let screen[address] = screen[address] & ~mask;
+		}
 		return;
 	}
 
     /** Draws a line from (x1, y1) to (x2, y2). */
     function void drawLine(int x1, int y1, int x2, int y2) {
-		//diff in x
-		//diff in y
+		var int dX, dY, yInc, xInc;
+		var int accY, accX;
+		var int cx, cy;
+		var int dbX, dbY;
 	
+		let dX = (x2 - x1);
+		let dY = (y2 - y1);
+		
+		let dbX = dX + dX;
+		let dbY = dY + dY;
+
+		let cx = x1;
+		let cy = y1;
+		
+		let xInc = 1;
+		let yInc = 1;
+		
+		if (dY < 0)
+		{
+			let yInc = -1;
+			let dY = -dY;
+			let dbY = -dbY;
+		}
+		
+		if (dX < 0)
+		{
+			let xInc = -1;
+			let dX = -dX;
+			let dbX = -dbX;
+		}
+		
+		if ((~(dX = 0)) | (~(dY = 0)))
+		{
+			if ((dY < dX) | (dX = dY))
+			{
+				let accX = 0;
+				
+				while (~(cx = x2))
+				{
+					let cx = cx + xInc;					
+					let accX = accX + dbY;
+					
+					if (accX > dX)
+					{
+						let cy = cy + yInc;
+						let accX = accX - dbX;
+					}
+					
+					do Screen.drawPixel(cx, cy);
+				}
+			}
+			else
+			{
+				let accY = 0;
+				while (~(cy = y2))
+				{
+					let cy = cy + yInc; //increase/decrease the value by 1
+					let accY = accY + dbX; //accumulated error on Y axle. Increases/decreases by two times the amount of dX. 
+					
+					if (accY > dY) //if the accumulated error is larger than the difference (y2 - y1) then move the x-point by 1 pixel
+					{
+						let cx = cx + xInc;
+						let accY = accY - dbY;
+					}
+					
+					do Screen.drawPixel(cx, cy);
+				}
+			}
+		}
+		
+		do Screen.drawPixel(x2, y2);
+		
+		return;
 	}
 
     /** Draws a filled rectangle where the top left corner
      *  is (x1, y1) and the bottom right corner is (x2, y2). */
     function void drawRectangle(int x1, int y1, int x2, int y2) {
-		var int dY;
-		var int dX;		
-		var int x;
-		var int y;
-		var int sx;
-		var int sy;
+		var int dY, dX, sx, sy, x, y;
+		
+		let dX = x2 - x1;
+		let dY = y2 - y1;
 	
-		let dX = Math.abs(x2 - x1);
-		let dY = Math.abs(y2 - y1);
-	
-		let sx = Math.min(x1, x2);
-		let sy = Math.min(y1, y2);
-
+		let sx = x1;
+		let sy = y1;
+		
 		while (x < dX)
 		{
 			let y = 0;
@@ -90,9 +185,26 @@ class Screen {
 			}
 			let x = x + 1;
 		}		
+
+		return;
     }
 
     /** Draws a filled circle of radius r around (cx, cy). */
     function void drawCircle(int cx, int cy, int r) {
+		var int sqrt, x1, x2, dy, y;
+		
+		let dy = -r;
+		while (~(dy = r))
+		{
+			let sqrt = Math.sqrt((r * r) - (dy * dy)); //Pythagoras, the distance from the center point
+			let x1 = cx - sqrt; //These two contain the opposite pixels
+			let x2 = cx + sqrt; //
+			let y = cy + dy; //Y value, 
+		
+			do Screen.drawLine(x1, y, x2, y);
+			let dy = dy + 1;
+		}
+		
+		return;
     }
 }

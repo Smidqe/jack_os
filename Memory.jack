@@ -13,14 +13,14 @@ class Memory {
 	
     /** Initializes memory parameters. */
     function void init() {
-		let memory = 2048; //whole memory
+		let memory = 2048; //Stack size!
 		
 		//muistin 2 ensimmäistä lohkoa ovat aina pituus ja pointteri seuraavaan (kuten luentokalvoistakin käy ilmi)
 		let length = 0;
 		let ptr = 1;
 		
-		let memory[length] = 14334; //
-		let memory[ptr] = null;
+		let memory[length] = 14334; //muistialueen koko
+		let memory[ptr] = null; //pointteri seuraavaan muistilohkoon.
 		return;
     }
 
@@ -97,8 +97,8 @@ class Memory {
 		var Array obj;
 		
 		let obj = object - 2; //remember those size and ptr ints!
-		let obj[ptr] = memory; //setting the pointer;
-		let memory = obj;
+		let obj[ptr] = memory; //setting the pointer to the current memory pointer;
+		let memory = obj; //free the memory by inserting obj back to memory
 	
 		return;
     }    
