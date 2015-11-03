@@ -13,26 +13,26 @@ class Screen {
 	
     /** Initializes the Screen. */
     function void init() {	
-		let screen = 16384;
-		let color = true;
+		let screen = 16384; // memory address of the screen
+		let color = true; //setting the color to black
 		
-			let pow2 = Array.new(16);
-			let pow2[0] = 1;
-			let pow2[1] = 2;
-			let pow2[2] = 4;
-			let pow2[3] = 8;
-			let pow2[4] = 16;
-			let pow2[5] = 32;
-			let pow2[6] = 64;
-			let pow2[7] = 128;
-			let pow2[8] = 256;
-			let pow2[9] = 512;
-			let pow2[10] = 1024;
-			let pow2[11] = 2048;
-			let pow2[12] = 4096;
-			let pow2[13] = 8192;
-			let pow2[14] = 16384;
-			let pow2[15] = 32767+1;
+		let pow2 = Array.new(16); //created a another instance of power of two, used only in this. (probably unnecessary)
+		let pow2[0] = 1;
+		let pow2[1] = 2;
+		let pow2[2] = 4;
+		let pow2[3] = 8;
+		let pow2[4] = 16;
+		let pow2[5] = 32;
+		let pow2[6] = 64;
+		let pow2[7] = 128;
+		let pow2[8] = 256;
+		let pow2[9] = 512;
+		let pow2[10] = 1024;
+		let pow2[11] = 2048;
+		let pow2[12] = 4096;
+		let pow2[13] = 8192;
+		let pow2[14] = 16384;
+		let pow2[15] = 32767+1;
 		
 		return;
 	}
@@ -45,7 +45,7 @@ class Screen {
 		let x = 0;
 		let y = 0;
 		
-		while (x < 512) //käydään läpi jokainen pikseli, alkaen pisteestä (0, 0);
+		while (x < 512) //Every pixel to either black or white starting from (0, 0), that's racist :(
 		{
 			let y = 0;
 			
@@ -73,27 +73,40 @@ class Screen {
     function void drawPixel(int x, int y) {
 		var int address, mask, value;
 		
+		if ((x < 0) | (x > 512) | (y < 0) | (y > 256))
+		{
+			do sys.error(7);
+		}
+		
 		let address = (y * 32) + (x / 16); //lasketaan annetun pisteen (x, y) muistialueen kohta.
 		let mask = (pow2[x & 15]); //jakojäännös x / 15 antaa tietyn binääriluvun.
 
 		if (color)
 		{
-			let screen[address] = screen[address] | mask; //annetaan muistialueen kohdan arvoksi unioni. 
+			let screen[address] = screen[address] | mask; //lets fill the memory address with a binary number.
 		}
 		else
 		{
-			let screen[address] = screen[address] & ~mask; //
+			let screen[address] = screen[address] & ~mask; //clears (x, y) if there is something (overrides)
 		}
 		return;
 	}
 
     /** Draws a line from (x1, y1) to (x2, y2). */
-    function void drawLine(int x1, int y1, int x2, int y2) {
+    function void drawLine(int x1, int y1, int x2, int y2) //handles the drawing a line, should handle every attempt (exception of out of screen), uses Bresenham's line algorithm.
+	{ 													   //unfortunately since jack can't handle decimals, the line wont be perfect. (double pixels)
 		var int dX, dY, yInc, xInc;
 		var int accY, accX;
 		var int cx, cy;
 		var int dbX, dbY;
 	
+		if ((x1 < 0) | (x1 > 512) | (x2 < 0) | (x2 > 512) | (y1 < 0) | (y1 > 256) | (y2 < 0) | (y2 > 256))
+		{
+			do sys.error(8);
+		}
+	
+	
+		//variable setting
 		let dX = (x2 - x1);
 		let dY = (y2 - y1);
 		
@@ -106,6 +119,7 @@ class Screen {
 		let xInc = 1;
 		let yInc = 1;
 		
+		//These two handle the case if the difference in either one direction is negative (stu.. silly user set the values wrong way)
 		if (dY < 0)
 		{
 			let yInc = -1;
@@ -120,18 +134,19 @@ class Screen {
 			let dbX = -dbX;
 		}
 		
+		//checks if either one is larger than 1, if both are 0 then there is no reason to continue. (Who draws lines of 1 pixel?!)
 		if ((~(dX = 0)) | (~(dY = 0)))
 		{
 			if ((dY < dX) | (dX = dY))
 			{
-				let accX = 0;
+				let accX = 0; //set the accumulated error to 0
 				
 				while (~(cx = x2))
 				{
 					let cx = cx + xInc;					
-					let accX = accX + dbY;
+					let accX = accX + dbY; //every step the accumulated error is increased by 2 * dY
 					
-					if (accX > dX)
+					if (accX > dX) //if the accumulated error is larger than the difference (x2 - x1) then move y by 1/-1 and decrease the accumulated error by dbX
 					{
 						let cy = cy + yInc;
 						let accX = accX - dbX;
@@ -169,6 +184,11 @@ class Screen {
     function void drawRectangle(int x1, int y1, int x2, int y2) {
 		var int dY, dX, sx, sy, x, y;
 		
+		if ((x1 < 0) | (x1 > 512) | (x2 < 0) | (x2 > 512) | (y1 < 0) | (y1 > 256) | (y2 < 0) | (y2 > 256))
+		{
+			do sys.error(9);
+		}
+		
 		let dX = x2 - x1;
 		let dY = y2 - y1;
 	
@@ -193,15 +213,25 @@ class Screen {
     function void drawCircle(int cx, int cy, int r) {
 		var int sqrt, x1, x2, dy, y;
 		
+		if (cx < 0 | cx > 512 | cy < 0 | cy > 256)
+		{
+			do Sys.error(12);
+		}
+		
+		if (r < 0 | r = 0)
+		{
+			do Sys.error(13);
+		}
+		
 		let dy = -r;
 		while (~(dy = r))
 		{
 			let sqrt = Math.sqrt((r * r) - (dy * dy)); //Pythagoras, the distance from the center point
 			let x1 = cx - sqrt; //These two contain the opposite pixels
-			let x2 = cx + sqrt; //
+			let x2 = cx + sqrt; 
 			let y = cy + dy; //Y value, 
 		
-			do Screen.drawLine(x1, y, x2, y);
+			do Screen.drawLine(x1, y, x2, y); //draws a line 
 			let dy = dy + 1;
 		}
 		

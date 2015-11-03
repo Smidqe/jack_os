@@ -14,9 +14,9 @@ class Output {
 
     // Character map for printing on the left of a screen word
    	static Array charMaps; 
-	static int column, row;
-	static Array screen;
-	static Array charMasks;
+	static int column, row; //column and the row
+	static Array screen; //screen memory location
+	static Array charMasks; 
 
     /** Initializes the screen and locates the cursor at the screen's top-left. */
     function void init() {
@@ -168,7 +168,7 @@ class Output {
     // If an invalid character is given, returns the character map of a black square.
     function Array getMap(char c) {
         
-        if ((c < 32) | (c > 126)) {
+        if ((c < 32) | (c > 126)) { //if the value is outside of this range, it has no printable char. see ASCII-table
             let c = 0;
         }
         
@@ -180,7 +180,7 @@ class Output {
     function void moveCursor(int i, int j) {
 		
 		/** if values are out of available range: error */
-		if((i < 0) | (i > 22) | (j < 0 ) | (j > 63)) {do Sys.error(20);}
+		if((i < 0) | (i > 22) | (j < 0 ) | (j > 63)) {do Sys.error(20);} //gives the error if the value is not within the screen
 		
 		/** add values to row & column */
 		let row = i;

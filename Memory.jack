@@ -13,22 +13,23 @@ class Memory {
 	
     /** Initializes memory parameters. */
     function void init() {
-		let memory = 2048; //Stack size!
+		let memory = 2048; //Stack heap size!
 		
+		//first two slots of a memory block are always size and pointer to next one (course material also says this);
 		//muistin 2 ensimmäistä lohkoa ovat aina pituus ja pointteri seuraavaan (kuten luentokalvoistakin käy ilmi)
 		let length = 0;
 		let ptr = 1;
 		
-		let memory[length] = 14334; //muistialueen koko
-		let memory[ptr] = null; //pointteri seuraavaan muistilohkoon.
+		let memory[length] = 14334; //Size of a memory area, can be anything
+		let memory[ptr] = null; //pointer to next memory block
 		return;
     }
 
     /** Returns the value of the main memory at the given address. */
     function int peek(int address) {
-		var Array mem;
+		var Array mem; 
 		
-		let mem = address;
+		let mem = address; //arrays are funny things in jack, since when int is applied to them, we can access stack and it's memory directly.
 		
 		return mem[0];
     }
@@ -39,7 +40,7 @@ class Memory {
 		var Array mem;
 		
 		let mem = address;
-		let mem[0] = value;
+		let mem[0] = value; //setting the value to the first slot of stack in addrees
 		
 		return;
     }
@@ -48,9 +49,21 @@ class Memory {
      *  specified size and returns a reference to its base address. */
     function int alloc(int size) {
 		var Array block, prev, nextb;
+		
+		if (size < 0)
+		{
+			do Sys.error(5);
+		}
+		
+		if (size > 2048)
+		{
+			do Sys.error(6);
+		}
+		
 		let block = memory;
 		let prev = 0;
 		
+		//Searching for the first block where our size fits, so sorry. No best-fit algorithm for you.
 		//Etsitään ensimmäinen lohko johon mahtuu. Ei valitettavasti best-fit algoritmia. Mennään hieman helpommalla algoritmilla. 
 		while (block[length] < size)
 		{

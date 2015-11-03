@@ -14,7 +14,13 @@ class String {
 
     /** Constructs a new empty String with a maximum length of maxLength. */
     constructor String new(int maxLength) {
-		if (maxLength = 0)
+		if (maxLength < 0)
+		{
+			do Sys.error(14);
+		}
+		
+		
+		if (maxLength = 0) //can't have arrays with length of 0, they are always 1 or higher (theoretically 0-size array is NULL)
 		{
 			let maxLength = 1;
 		}
@@ -39,11 +45,21 @@ class String {
 
     /** Returns the character at location j. */
     method char charAt(int j) {
+		if (j > __len | j < 0)
+		{
+			do Sys.error(15);
+		}
+		
 		return buffer[j];
     }
 
     /** Sets the j'th character of this string to be c. */
     method void setCharAt(int j, char c) {
+		if (j > __len | j < 0)
+		{
+			do Sys.error(16);
+		}
+		
 		let buffer[j] = c;
 		
 		return;
@@ -52,7 +68,12 @@ class String {
     /** Appends the character c to the end of this String.
      *  Returns this string as the return value. */
     method String appendChar(char c) {
-		if (__str_len < __len)
+		if (__str_len = __len)
+		{
+			do Sys.error(17);
+		}
+		
+		if (__str_len < __len) //can't add anymore chars if the __str_len is larger than the initial string length
 		{
 			let buffer[__str_len] = c;
 			let __str_len = __str_len + 1;
@@ -63,10 +84,15 @@ class String {
 
     /** Erases the last character from this String. */
     method void eraseLastChar() {
-		if (__str_len > 0)
+		if (__str_len = 0)
 		{
-			let buffer[__str_len] = "";
-			let __str_len = __str_len - 1;
+			do Sys.error(18);
+		}
+		
+		if (__str_len > 0) //no reason to remove anything if the string is empty
+		{
+			let buffer[__str_len] = ""; //last location is set to empty
+			let __str_len = __str_len - 1; //decrease the size by 1
 		}
 		
 		return;
@@ -84,10 +110,10 @@ class String {
 		let i = 0;
 		while (~s)
 		{
-			if (~buffer[i] < 48 & ~buffer[i] > 57) //tarkistetaan että onko buffer[i] numero ASCII-taulukossa.
+			if (~buffer[i] < 48 & ~buffer[i] > 57) //Checking if the char's value in ASCII is between 48 and 57 or a number
 			{
 				let s = true;
-				let v = v * 10 + (buffer[i] - 48); //kerrotaan luvulla 10 ja lisätään numero.
+				let v = v * 10 + (buffer[i] - 48); //Multiply by ten and add the value in buffer[i]
 			}
 
 			let i = i + 1;
@@ -96,18 +122,35 @@ class String {
 		return v;
 	}
 
+	method int int_size(int n)
+	{
+		var int v, l;
+		while (v > 10)
+		{
+			let v = v / 10;
+			let l = l + 1;
+		}
+		
+		return l;
+	}
+	
     /** Sets this String to hold a representation of the given number. */
     method void setInt(int number) {
 		var int l;
 		
+		if (int_size(number) > __len)
+		{
+			do Sys.error(19);
+		}
+		
 		let l = number / 10;
 		if (l < 10)
 		{
-			do appendChar(l); //lisätään merkki tähän objektiin.
+			do appendChar(l); //Appending the number that's smaller than 10 to the object
 		}
 		else
 		{
-			do appendChar(setInt(number / 10)); //kutsutaan rekursiivisesti setInt:ä aina jakaen 10, kunnes meillä on arvo joka < 10
+			do appendChar(setInt(number / 10)); //Recursive calling this function until we have a number that's smaller than 10
 		}
 		
 		return;

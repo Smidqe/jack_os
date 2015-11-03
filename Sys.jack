@@ -17,6 +17,8 @@ class Sys {
 		do Keyboard.init();
 		do Output.init();
 		do Math.init();
+		do Main.main();
+		do Sys.halt();
 		
 		return;
     }
@@ -26,7 +28,7 @@ class Sys {
 		var int c;
 		let c = 0;
 		
-		while (~(c < 0))
+		while (~(c < 0)) //loops for eternity, not a best way to implement a halt (there is no way of breaking from it!)
 		{
 			let c = c + 1;
 		}	
@@ -36,11 +38,15 @@ class Sys {
 
     /** Waits approximately duration milliseconds and then returns. */
     function void wait(int duration) {
-		
 		var int c;
+		if (duration < 0)
+		{
+			do Sys.error(1);
+		}
+		
 		let c = 0;
 		
-		while (~(c = duration))
+		while (~(c = duration)) //wait exactly the duration set, but 
 		{
 			let c = c + 1;
 		}
